@@ -48,12 +48,22 @@ class BandoSchedulerService:
                 max_instances=1
             )
 
-            # 🤖 Job AI Bandi Agent - Ricerca automatica ogni 6 ore
+            # 🤖 Job AI Bandi Agent - Ricerca automatica ogni 24 ore
             self.scheduler.add_job(
                 func=self._run_ai_bandi_search,
-                trigger=IntervalTrigger(hours=6),
-                id='ai_bandi_search',
-                name='AI Bandi Agent - Ricerca automatica',
+                trigger=CronTrigger(hour=6, minute=0),  # Ogni giorno alle 06:00
+                id='ai_bandi_search_daily',
+                name='AI Bandi Agent - Ricerca giornaliera',
+                replace_existing=True,
+                max_instances=1
+            )
+            
+            # 🏛️ Job ricerca comuni - Due volte al giorno
+            self.scheduler.add_job(
+                func=self._run_ai_bandi_search,
+                trigger=CronTrigger(hour=18, minute=0),  # Anche alle 18:00
+                id='ai_bandi_search_evening',
+                name='AI Bandi Agent - Ricerca serale',
                 replace_existing=True,
                 max_instances=1
             )

@@ -47,6 +47,82 @@ class AIBandiAgent:
             "regione campania bandi", "sviluppo campania bandi"
         ]
 
+        # 🏛️ TUTTI I COMUNI CAPOLUOGO DELLA CAMPANIA
+        self.comuni_campania = {
+            # Capoluoghi di Provincia
+            "salerno": {
+                "url": "https://www.comune.salerno.it",
+                "bandi_url": "https://www.comune.salerno.it/client/scheda.aspx?schession=c_bandi",
+                "albo_url": "https://www.comune.salerno.it/albo-pretorio"
+            },
+            "napoli": {
+                "url": "https://www.comune.napoli.it",
+                "bandi_url": "https://www.comune.napoli.it/bandi",
+                "albo_url": "https://www.comune.napoli.it/albo-pretorio"
+            },
+            "avellino": {
+                "url": "https://www.comune.avellino.it",
+                "bandi_url": "https://www.comune.avellino.it/it/page/bandi-e-gare",
+                "albo_url": "https://www.comune.avellino.it/albo-pretorio"
+            },
+            "benevento": {
+                "url": "https://www.comune.benevento.it",
+                "bandi_url": "https://www.comune.benevento.it/bandi-e-gare",
+                "albo_url": "https://www.comune.benevento.it/albo-pretorio"
+            },
+            "caserta": {
+                "url": "https://www.comune.caserta.it",
+                "bandi_url": "https://www.comune.caserta.it/bandi",
+                "albo_url": "https://www.comune.caserta.it/albo-pretorio"
+            },
+            # Altri comuni importanti provincia Salerno
+            "cava_de_tirreni": {
+                "url": "https://www.comune.cavadetirreni.sa.it",
+                "bandi_url": "https://www.comune.cavadetirreni.sa.it/bandi"
+            },
+            "battipaglia": {
+                "url": "https://www.comune.battipaglia.sa.it",
+                "bandi_url": "https://www.comune.battipaglia.sa.it/bandi"
+            },
+            "eboli": {
+                "url": "https://www.comune.eboli.sa.it",
+                "bandi_url": "https://www.comune.eboli.sa.it/bandi"
+            },
+            "nocera_inferiore": {
+                "url": "https://www.comune.nocera-inferiore.sa.it",
+                "bandi_url": "https://www.comune.nocera-inferiore.sa.it/bandi"
+            },
+            "scafati": {
+                "url": "https://www.comune.scafati.sa.it",
+                "bandi_url": "https://www.comune.scafati.sa.it/bandi"
+            },
+            # Altri comuni importanti provincia Napoli
+            "torre_del_greco": {
+                "url": "https://www.comune.torredelgreco.na.it",
+                "bandi_url": "https://www.comune.torredelgreco.na.it/bandi"
+            },
+            "giugliano": {
+                "url": "https://www.comune.giugliano.na.it",
+                "bandi_url": "https://www.comune.giugliano.na.it/bandi"
+            },
+            "castellammare_di_stabia": {
+                "url": "https://www.comune.castellammare-di-stabia.na.it",
+                "bandi_url": "https://www.comune.castellammare-di-stabia.na.it/bandi"
+            },
+            "portici": {
+                "url": "https://www.comune.portici.na.it",
+                "bandi_url": "https://www.comune.portici.na.it/bandi"
+            },
+            "ercolano": {
+                "url": "https://www.comune.ercolano.na.it",
+                "bandi_url": "https://www.comune.ercolano.na.it/bandi"
+            },
+            "pozzuoli": {
+                "url": "https://www.comune.pozzuoli.na.it",
+                "bandi_url": "https://www.comune.pozzuoli.na.it/bandi"
+            },
+        }
+
         # Fonti prioritarie per la ricerca
         self.priority_sources = [
             "regione.campania.it",
@@ -55,10 +131,18 @@ class AIBandiAgent:
             "csvnapoli.it",
             "csvsalerno.it",
             "comune.salerno.it",
+            "comune.napoli.it",
+            "comune.avellino.it",
+            "comune.benevento.it",
+            "comune.caserta.it",
             "fondazionecomunita.it",
             "italianonprofit.it",
-            "infobandi.csvnet.it"
+            "infobandi.csvnet.it",
+            "cantiereterzosettore.it"
         ]
+        
+        # 📅 Intervallo di ricerca automatica
+        self.search_interval_hours = 24  # Cerca ogni 24 ore
 
     async def __aenter__(self):
         self.session = httpx.AsyncClient(
@@ -313,6 +397,172 @@ Includi bandi di:
 
         return bandi
 
+    async def _search_comuni_campania(self) -> List[Dict]:
+        """🏛️ Cerca bandi da TUTTI i comuni campani usando Gemini con Google Search"""
+        
+        all_bandi = []
+        
+        if not self.google_api_key:
+            logger.warning("⚠️ Google API key non configurata, skip ricerca comuni")
+            return []
+        
+        # Lista completa dei comuni da cercare
+        comuni_da_cercare = [
+            # Capoluoghi di provincia
+            ("Salerno", "comune.salerno.it"),
+            ("Napoli", "comune.napoli.it"),
+            ("Avellino", "comune.avellino.it"),
+            ("Benevento", "comune.benevento.it"),
+            ("Caserta", "comune.caserta.it"),
+            # Comuni importanti provincia Salerno
+            ("Cava de' Tirreni", "comune.cavadetirreni.sa.it"),
+            ("Battipaglia", "comune.battipaglia.sa.it"),
+            ("Eboli", "comune.eboli.sa.it"),
+            ("Nocera Inferiore", "comune.nocera-inferiore.sa.it"),
+            ("Scafati", "comune.scafati.sa.it"),
+            ("Pagani", "comune.pagani.sa.it"),
+            ("Angri", "comune.angri.sa.it"),
+            ("Sarno", "comune.sarno.sa.it"),
+            ("Mercato San Severino", "comune.mercatosanseverino.sa.it"),
+            # Comuni importanti provincia Napoli
+            ("Torre del Greco", "comune.torredelgreco.na.it"),
+            ("Giugliano in Campania", "comune.giugliano.na.it"),
+            ("Castellammare di Stabia", "comune.castellammare-di-stabia.na.it"),
+            ("Portici", "comune.portici.na.it"),
+            ("Ercolano", "comune.ercolano.na.it"),
+            ("Pozzuoli", "comune.pozzuoli.na.it"),
+            ("Afragola", "comune.afragola.na.it"),
+            ("Casoria", "comune.casoria.na.it"),
+            ("Marano di Napoli", "comune.marano.na.it"),
+            # Comuni importanti provincia Caserta
+            ("Aversa", "comune.aversa.ce.it"),
+            ("Maddaloni", "comune.maddaloni.ce.it"),
+            ("Marcianise", "comune.marcianise.ce.it"),
+            ("Mondragone", "comune.mondragone.ce.it"),
+            # Comuni provincia Avellino
+            ("Ariano Irpino", "comune.arianoirpino.av.it"),
+            ("Atripalda", "comune.atripalda.av.it"),
+            # Comuni provincia Benevento
+            ("Montesarchio", "comune.montesarchio.bn.it"),
+            ("San Giorgio del Sannio", "comune.sangiorgodelsannio.bn.it"),
+        ]
+        
+        logger.info(f"🏛️ Ricerca bandi da {len(comuni_da_cercare)} comuni campani...")
+        
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={self.google_api_key}"
+        
+        # Fai una ricerca aggregata per gruppi di comuni
+        for i in range(0, len(comuni_da_cercare), 5):
+            gruppo_comuni = comuni_da_cercare[i:i+5]
+            nomi_comuni = ", ".join([c[0] for c in gruppo_comuni])
+            
+            prompt = f"""Sei un esperto di bandi e finanziamenti per il Terzo Settore italiano.
+
+CERCA TUTTI I BANDI DI FINANZIAMENTO ATTIVI pubblicati dai seguenti Comuni della Campania:
+{nomi_comuni}
+
+Cerca su:
+- Siti ufficiali dei comuni (.comune.*.it)
+- Albi pretori
+- Sezioni bandi e avvisi pubblici
+- Sezioni contributi e finanziamenti
+
+Trova bandi per:
+- Associazioni di Promozione Sociale (APS)
+- Enti del Terzo Settore (ETS)
+- Organizzazioni di Volontariato (ODV)
+- Associazioni culturali, sportive, sociali
+- Contributi per eventi e manifestazioni
+- Sostegno ad attività sociali
+
+Per ogni bando trovato, fornisci ESATTAMENTE in formato JSON:
+{{
+    "bandi": [
+        {{
+            "titolo": "Nome completo del bando",
+            "ente": "Comune di [nome]",
+            "scadenza": "Data scadenza (GG/MM/AAAA o 'Sempre aperto')",
+            "importo": "Importo disponibile",
+            "link": "URL DIRETTO E COMPLETO al bando (deve iniziare con https://)",
+            "descrizione": "Breve descrizione (max 150 parole)",
+            "destinatari": "Chi può partecipare",
+            "ambito": "sociale/cultura/sport/ambiente/giovani"
+        }}
+    ]
+}}
+
+REGOLE CRITICHE:
+1. I link DEVONO essere URL completi e funzionanti (https://www.comune.*.it/...)
+2. NON inventare bandi - usa SOLO informazioni verificate dalla ricerca
+3. Includi SOLO bandi con scadenza futura o sempre aperti
+4. Se non trovi bandi per un comune, non inventarli
+"""
+
+            payload = {
+                "contents": [{
+                    "parts": [{"text": prompt}]
+                }],
+                "generationConfig": {
+                    "temperature": 0.1,
+                    "topK": 40,
+                    "topP": 0.95,
+                    "maxOutputTokens": 8192
+                },
+                "tools": [{
+                    "google_search": {}
+                }]
+            }
+            
+            try:
+                response = await self.session.post(url, json=payload, timeout=90.0)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    if "candidates" in data and len(data["candidates"]) > 0:
+                        content = data["candidates"][0].get("content", {})
+                        parts = content.get("parts", [])
+                        
+                        for part in parts:
+                            text = part.get("text", "")
+                            
+                            # Cerca JSON nella risposta
+                            json_match = re.search(r'\{[\s\S]*"bandi"[\s\S]*\}', text)
+                            if json_match:
+                                try:
+                                    result = json.loads(json_match.group())
+                                    if "bandi" in result:
+                                        for b in result["bandi"]:
+                                            link = b.get('link', '')
+                                            # Verifica che il link sia valido
+                                            if link and link.startswith('https://'):
+                                                all_bandi.append({
+                                                    'title': b.get('titolo', '')[:500],
+                                                    'ente': b.get('ente', 'Comune'),
+                                                    'scadenza_raw': b.get('scadenza', ''),
+                                                    'importo': b.get('importo', ''),
+                                                    'link': link,
+                                                    'descrizione': b.get('descrizione', '')[:1000],
+                                                    'destinatari': b.get('destinatari', ''),
+                                                    'categoria': b.get('ambito', 'sociale'),
+                                                    'fonte': BandoSource.COMUNE_SALERNO,
+                                                    'ai_source': 'gemini_comuni'
+                                                })
+                                                logger.info(f"   ✅ Trovato: {b.get('titolo', '')[:50]}...")
+                                except json.JSONDecodeError:
+                                    pass
+                else:
+                    logger.warning(f"   ⚠️ Errore API Gemini: {response.status_code}")
+                    
+            except Exception as e:
+                logger.warning(f"   ❌ Errore ricerca comuni {nomi_comuni}: {e}")
+            
+            # Rate limiting tra gruppi
+            await asyncio.sleep(2)
+        
+        logger.info(f"🏛️ Ricerca comuni completata: {len(all_bandi)} bandi trovati")
+        return all_bandi
+
     def _extract_ente_from_url(self, url: str) -> str:
         """Estrae l'ente dal dominio URL"""
         domain = urlparse(url).netloc.lower()
@@ -325,6 +575,9 @@ Includi bandi di:
             'csvsalerno.it': 'CSV Salerno',
             'comune.salerno.it': 'Comune di Salerno',
             'comune.napoli.it': 'Comune di Napoli',
+            'comune.avellino.it': 'Comune di Avellino',
+            'comune.benevento.it': 'Comune di Benevento',
+            'comune.caserta.it': 'Comune di Caserta',
             'infobandi.csvnet.it': 'CSVnet Italia',
             'italianonprofit.it': 'Italia Non Profit'
         }
@@ -332,6 +585,13 @@ Includi bandi di:
         for domain_key, ente_name in ente_map.items():
             if domain_key in domain:
                 return ente_name
+
+        # Estrai nome comune da URL
+        if 'comune.' in domain:
+            parts = domain.replace('www.', '').split('.')
+            if len(parts) >= 2:
+                nome_comune = parts[1].replace('-', ' ').title()
+                return f"Comune di {nome_comune}"
 
         return domain.replace('www.', '').split('.')[0].title()
 
@@ -426,7 +686,7 @@ Se non trovi bandi validi, rispondi: {{"bandi": []}}
     async def run_full_search(self, db: AsyncSession, keywords: List[str] = None) -> Dict:
         """Esegue una ricerca completa con tutti i metodi AI"""
 
-        logger.info("🤖 Avvio AI Bandi Agent - Ricerca Completa")
+        logger.info("🤖 Avvio AI Bandi Agent - Ricerca Completa Campania")
 
         all_bandi = []
         results = {
@@ -440,15 +700,23 @@ Se non trovi bandi validi, rispondi: {{"bandi": []}}
             keywords = self.keywords_aps
 
         try:
-            # 1. Ricerca con Gemini (più potente, con grounding)
+            # 1. 🏛️ RICERCA BANDI DAI COMUNI CAMPANI (PRIORITÀ)
+            logger.info("🏛️ Fase 1: Ricerca bandi dai Comuni della Campania")
+            comuni_bandi = await self._search_comuni_campania()
+            all_bandi.extend(comuni_bandi)
+            results['sources']['comuni_campania'] = len(comuni_bandi)
+            
+            # 2. Ricerca con Gemini (più potente, con grounding)
+            logger.info("🔍 Fase 2: Ricerca con Gemini AI + Google Search")
             for query in keywords[:5]:  # Limita per non esagerare
                 logger.info(f"🔍 Cercando con Gemini: {query}")
                 gemini_results = await self.search_with_gemini(query)
                 all_bandi.extend(gemini_results)
-                results['sources']['gemini'] = len(gemini_results)
+                results['sources']['gemini'] = results['sources'].get('gemini', 0) + len(gemini_results)
                 await asyncio.sleep(1)  # Rate limiting
 
-            # 2. Ricerca con Groq (veloce, per integrare)
+            # 3. Ricerca con Groq (veloce, per integrare)
+            logger.info("⚡ Fase 3: Ricerca con Groq AI")
             for query in keywords[:3]:
                 logger.info(f"⚡ Cercando con Groq: {query}")
                 groq_results = await self.search_with_groq(query)
@@ -456,12 +724,16 @@ Se non trovi bandi validi, rispondi: {{"bandi": []}}
                 results['sources']['groq'] = results['sources'].get('groq', 0) + len(groq_results)
                 await asyncio.sleep(0.5)
 
-            # 3. Scraping intelligente di pagine chiave
+            # 4. Scraping intelligente di pagine chiave
+            logger.info("🌐 Fase 4: Scraping pagine istituzionali")
             key_urls = [
                 "https://www.sviluppocampania.it/bandi-aperti/",
                 "https://www.fondazioneconilsud.it/bandi/",
                 "https://www.csvnapoli.it/category/progettazione/bandi/",
-                "https://infobandi.csvnet.it/home/bandi-attivi/"
+                "https://www.csvsalerno.it/bandi/",
+                "https://infobandi.csvnet.it/home/bandi-attivi/",
+                "https://www.cantiereterzosettore.it/bandi/",
+                "https://italianonprofit.it/bandi/",
             ]
 
             for url in key_urls:
@@ -474,7 +746,8 @@ Se non trovi bandi validi, rispondi: {{"bandi": []}}
                     logger.warning(f"Errore scraping {url}: {e}")
                 await asyncio.sleep(2)
 
-            # 4. Deduplica e salva nel database
+            # 5. Deduplica e salva nel database
+            logger.info("💾 Fase 5: Salvataggio nel database")
             saved_count = 0
             duplicates = 0
 
