@@ -57,7 +57,7 @@ class BandoSchedulerService:
                 replace_existing=True,
                 max_instances=1
             )
-            
+
             # 🏛️ Job ricerca comuni - Due volte al giorno
             self.scheduler.add_job(
                 func=self._run_ai_bandi_search,

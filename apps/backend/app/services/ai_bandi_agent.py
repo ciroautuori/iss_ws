@@ -140,7 +140,7 @@ class AIBandiAgent:
             "infobandi.csvnet.it",
             "cantiereterzosettore.it"
         ]
-        
+
         # 📅 Intervallo di ricerca automatica
         self.search_interval_hours = 24  # Cerca ogni 24 ore
 
@@ -399,13 +399,13 @@ Includi bandi di:
 
     async def _search_comuni_campania(self) -> List[Dict]:
         """🏛️ Cerca bandi da TUTTI i comuni campani usando Gemini con Google Search"""
-        
+
         all_bandi = []
-        
+
         if not self.google_api_key:
             logger.warning("⚠️ Google API key non configurata, skip ricerca comuni")
             return []
-        
+
         # Lista completa dei comuni da cercare
         comuni_da_cercare = [
             # Capoluoghi di provincia
@@ -446,16 +446,16 @@ Includi bandi di:
             ("Montesarchio", "comune.montesarchio.bn.it"),
             ("San Giorgio del Sannio", "comune.sangiorgodelsannio.bn.it"),
         ]
-        
+
         logger.info(f"🏛️ Ricerca bandi da {len(comuni_da_cercare)} comuni campani...")
-        
+
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={self.google_api_key}"
-        
+
         # Fai una ricerca aggregata per gruppi di comuni
         for i in range(0, len(comuni_da_cercare), 5):
             gruppo_comuni = comuni_da_cercare[i:i+5]
             nomi_comuni = ", ".join([c[0] for c in gruppo_comuni])
-            
+
             prompt = f"""Sei un esperto di bandi e finanziamenti per il Terzo Settore italiano.
 
 CERCA TUTTI I BANDI DI FINANZIAMENTO ATTIVI pubblicati dai seguenti Comuni della Campania:
@@ -512,20 +512,20 @@ REGOLE CRITICHE:
                     "google_search": {}
                 }]
             }
-            
+
             try:
                 response = await self.session.post(url, json=payload, timeout=90.0)
-                
+
                 if response.status_code == 200:
                     data = response.json()
-                    
+
                     if "candidates" in data and len(data["candidates"]) > 0:
                         content = data["candidates"][0].get("content", {})
                         parts = content.get("parts", [])
-                        
+
                         for part in parts:
                             text = part.get("text", "")
-                            
+
                             # Cerca JSON nella risposta
                             json_match = re.search(r'\{[\s\S]*"bandi"[\s\S]*\}', text)
                             if json_match:
@@ -553,13 +553,13 @@ REGOLE CRITICHE:
                                     pass
                 else:
                     logger.warning(f"   ⚠️ Errore API Gemini: {response.status_code}")
-                    
+
             except Exception as e:
                 logger.warning(f"   ❌ Errore ricerca comuni {nomi_comuni}: {e}")
-            
+
             # Rate limiting tra gruppi
             await asyncio.sleep(2)
-        
+
         logger.info(f"🏛️ Ricerca comuni completata: {len(all_bandi)} bandi trovati")
         return all_bandi
 
@@ -705,7 +705,7 @@ Se non trovi bandi validi, rispondi: {{"bandi": []}}
             comuni_bandi = await self._search_comuni_campania()
             all_bandi.extend(comuni_bandi)
             results['sources']['comuni_campania'] = len(comuni_bandi)
-            
+
             # 2. Ricerca con Gemini (più potente, con grounding)
             logger.info("🔍 Fase 2: Ricerca con Gemini AI + Google Search")
             for query in keywords[:5]:  # Limita per non esagerare
