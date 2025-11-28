@@ -7,18 +7,20 @@ from .newspost import NewsPost
 from .project import Project
 from .user import User, UserRole, UserStatus, AccessibilityNeeds, UserSession, UserPreferences
 from .volunteer import VolunteerApplication
+from .aps_user import APSUser, BandoApplication, BandoWatchlist, AIRecommendation
 
 __all__ = [
     "AdminUser",
+    "APSUser",
     "Bando",
-    "BandoStatus", 
+    "BandoStatus",
     "BandoConfig",
     "SourceType",
     "ScheduleFrequency",
     "Donation",
     "Event",
     "NewsPost",
-    "Project", 
+    "Project",
     "User",
     "UserRole",
     "UserStatus",
@@ -26,4 +28,7 @@ __all__ = [
     "UserSession",
     "UserPreferences",
     "VolunteerApplication",
+    "BandoApplication",
+    "BandoWatchlist",
+    "AIRecommendation",
 ]
