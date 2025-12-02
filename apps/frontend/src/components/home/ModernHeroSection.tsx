@@ -46,7 +46,7 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
       <div className="absolute top-40 right-20 w-32 h-32 bg-iss-gold-400/5 rounded-full blur-2xl animate-pulse delay-1000" />
       <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-white/5 rounded-full blur-xl animate-pulse delay-2000" />
 
-      <div className="relative container mx-auto px-3 sm:px-4 py-12 sm:py-16 md:py-20 lg:py-32">
+      <div className="relative container mx-auto px-3 sm:px-4 pt-20 sm:pt-24 md:pt-28 lg:pt-36 pb-12 sm:pb-16 md:pb-20 lg:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Hero Content */}
           <div className="text-white space-y-8">
