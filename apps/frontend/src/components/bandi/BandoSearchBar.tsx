@@ -187,7 +187,7 @@ export const BandoSearchBar: React.FC<BandoSearchBarProps> = ({
                   <SelectValue placeholder="Tutte le fonti" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tutte le fonti</SelectItem>
+                  <SelectItem value="all">Tutte le fonti</SelectItem>
                   {fontiOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
@@ -205,7 +205,7 @@ export const BandoSearchBar: React.FC<BandoSearchBarProps> = ({
                   <SelectValue placeholder="Tutti gli status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tutti gli status</SelectItem>
+                  <SelectItem value="all">Tutti gli status</SelectItem>
                   {statusOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
