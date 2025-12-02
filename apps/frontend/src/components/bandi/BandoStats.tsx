@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  TrendingUp, 
-  Clock, 
-  Euro, 
+import {
+  TrendingUp,
+  Clock,
+  Euro,
   Building2,
   Target,
   AlertTriangle,
@@ -77,28 +77,28 @@ export const BandoStats: React.FC<BandoStatsProps> = ({
 
   if (compact) {
     return (
-      <Card className={cn("w-fit", className)}>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-iss-bordeaux-600">
+      <Card className={cn("w-full", className)}>
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-center justify-around sm:justify-start sm:gap-4">
+            <div className="text-center px-2">
+              <div className="text-xl sm:text-2xl font-bold text-iss-bordeaux-600">
                 {formatNumber(stats.attivi)}
               </div>
-              <div className="text-xs text-gray-500">Attivi</div>
+              <div className="text-[10px] sm:text-xs text-gray-500">Attivi</div>
             </div>
-            <div className="h-8 w-px bg-gray-200"></div>
-            <div className="text-center">
-              <div className="text-lg font-semibold text-orange-600">
+            <div className="h-6 sm:h-8 w-px bg-gray-200"></div>
+            <div className="text-center px-2">
+              <div className="text-base sm:text-lg font-semibold text-orange-600">
                 {formatNumber(stats.in_scadenza)}
               </div>
-              <div className="text-xs text-gray-500">In scadenza</div>
+              <div className="text-[10px] sm:text-xs text-gray-500">Scadenza</div>
             </div>
-            <div className="h-8 w-px bg-gray-200"></div>
-            <div className="text-center">
+            <div className="h-6 sm:h-8 w-px bg-gray-200"></div>
+            <div className="text-center px-2">
               <div className="text-sm font-medium text-green-600">
                 +{formatNumber(stats.nuovi_settimana)}
               </div>
-              <div className="text-xs text-gray-500">Questa settimana</div>
+              <div className="text-[10px] sm:text-xs text-gray-500">Nuovi</div>
             </div>
           </div>
         </CardContent>
@@ -202,7 +202,7 @@ export const BandoStats: React.FC<BandoStatsProps> = ({
         <CardContent>
           <div className="space-y-2">
             {stats.fonti && Object.entries(stats.fonti)
-              .sort(([,a], [,b]) => b - a)
+              .sort(([, a], [, b]) => b - a)
               .slice(0, 3)
               .map(([fonte, count]) => (
                 <div key={fonte} className="flex items-center justify-between">
@@ -230,7 +230,7 @@ export const BandoStats: React.FC<BandoStatsProps> = ({
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {stats.categorie && Object.entries(stats.categorie)
-              .sort(([,a], [,b]) => b - a)
+              .sort(([, a], [, b]) => b - a)
               .slice(0, 6)
               .map(([categoria, count]) => {
                 const percentage = (count / stats.totali) * 100;
@@ -245,7 +245,7 @@ export const BandoStats: React.FC<BandoStatsProps> = ({
                       </span>
                     </div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-gradient-to-r from-iss-bordeaux-500 to-iss-gold-500 rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(percentage, 100)}%` }}
                       />
@@ -280,13 +280,13 @@ export const BandoStats: React.FC<BandoStatsProps> = ({
                   <div className="text-xs font-medium text-green-600">
                     {formatCurrency(trend.importo)}
                   </div>
-                  
+
                   {/* Mini bar chart */}
                   <div className="mt-2 h-1 bg-gray-100 rounded overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-gradient-to-r from-iss-bordeaux-400 to-iss-gold-400"
-                      style={{ 
-                        width: `${(trend.count / Math.max(...stats.trend_mensile.map(t => t.count))) * 100}%` 
+                      style={{
+                        width: `${(trend.count / Math.max(...stats.trend_mensile.map(t => t.count))) * 100}%`
                       }}
                     />
                   </div>

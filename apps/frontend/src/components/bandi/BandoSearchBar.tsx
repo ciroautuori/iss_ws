@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/cn';
-import { bandoService } from '@/services/api';
+import { bandoAPI } from '@/services/api';
 import type { BandoSource, BandoStatus, BandoSearchParams } from '@/types/api';
 
 interface BandoSearchBarProps {
@@ -54,7 +54,7 @@ export const BandoSearchBar: React.FC<BandoSearchBarProps> = ({
   useEffect(() => {
     const loadSuggestions = async () => {
       try {
-        const stats = await bandoService.getStats();
+        const stats = await bandoAPI.getStats();
         if (stats.keywords_top) {
           const keywords = stats.keywords_top.map(item => item.keyword);
           setSuggestions(keywords);

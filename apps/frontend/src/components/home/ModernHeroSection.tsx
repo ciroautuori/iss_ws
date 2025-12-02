@@ -18,6 +18,7 @@ interface ModernHeroSectionProps {
     total_bandi?: number;
     bandi_attivi?: number;
     bandi_scaduti?: number;
+    in_scadenza?: number;
     bandi_per_fonte?: Record<string, number>;
     ultimi_trovati?: number;
     media_giornaliera?: number;
@@ -27,7 +28,7 @@ interface ModernHeroSectionProps {
 export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
   // Solo statistiche reali dal database
   const totalBandi = stats?.total_bandi || 0;
-  const bandiAttivi = stats?.bandi_attivi || 0;
+  const inScadenza = stats?.in_scadenza || 0;
   const fontiMonitorate = stats?.bandi_per_fonte ? Object.keys(stats.bandi_per_fonte).length : 0;
 
   return (
@@ -45,7 +46,7 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
       <div className="absolute top-40 right-20 w-32 h-32 bg-iss-gold-400/5 rounded-full blur-2xl animate-pulse delay-1000" />
       <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-white/5 rounded-full blur-xl animate-pulse delay-2000" />
 
-      <div className="relative container mx-auto px-4 py-20 lg:py-32">
+      <div className="relative container mx-auto px-3 sm:px-4 py-12 sm:py-16 md:py-20 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Hero Content */}
           <div className="text-white space-y-8">
@@ -57,7 +58,7 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
               </Badge>
 
               {/* Main Headline */}
-              <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 Monitoraggio bandi
                 <span className="text-iss-gold-400 block mt-2">
                   per il Terzo Settore
@@ -68,7 +69,7 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
               </h1>
 
               {/* Subtitle */}
-              <p className="text-xl lg:text-2xl text-iss-bordeaux-100 leading-relaxed max-w-2xl">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-iss-bordeaux-100 leading-relaxed max-w-2xl">
                 ISS monitora automaticamente i bandi di finanziamento per APS della Campania,
                 usando l'intelligenza artificiale per trovare le migliori opportunità.
               </p>
@@ -87,11 +88,11 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-white/80 bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-iss-bordeaux-900 hover:border-white px-8 py-4 text-lg font-semibold transition-all duration-300 hover:scale-105"
+                className="border-2 border-white/80 bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-iss-bordeaux-900 hover:border-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto min-h-[44px]"
                 onClick={() => window.location.href = '/bandi'}
               >
                 <Target className="w-5 h-5 mr-2" />
@@ -100,7 +101,7 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
 
               <Button
                 size="lg"
-                className="bg-iss-gold-500 hover:bg-iss-gold-400 text-iss-bordeaux-900 font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="bg-iss-gold-500 hover:bg-iss-gold-400 text-iss-bordeaux-900 font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto min-h-[44px]"
                 onClick={() => window.location.href = '/auth/register'}
               >
                 <Users className="w-5 h-5 mr-2" />
@@ -109,63 +110,63 @@ export function ModernHeroSection({ stats }: ModernHeroSectionProps) {
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-6 pt-8 border-t border-iss-bordeaux-600">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-6 pt-6 sm:pt-8 border-t border-iss-bordeaux-600">
               <div className="flex items-center gap-2 text-iss-bordeaux-200">
-                <Shield className="w-5 h-5 text-iss-gold-400" />
-                <span className="text-sm font-medium">Sicuro e Certificato</span>
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-iss-gold-400" />
+                <span className="text-xs sm:text-sm font-medium">Sicuro e Certificato</span>
               </div>
               <div className="flex items-center gap-2 text-iss-bordeaux-200">
-                <Accessibility className="w-5 h-5 text-iss-gold-400" />
-                <span className="text-sm font-medium">WCAG 2.1 AA</span>
+                <Accessibility className="w-4 h-4 sm:w-5 sm:h-5 text-iss-gold-400" />
+                <span className="text-xs sm:text-sm font-medium">WCAG 2.1 AA</span>
               </div>
               <div className="flex items-center gap-2 text-iss-bordeaux-200">
-                <Globe className="w-5 h-5 text-iss-gold-400" />
-                <span className="text-sm font-medium">Open Source</span>
+                <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-iss-gold-400" />
+                <span className="text-xs sm:text-sm font-medium">Open Source</span>
               </div>
             </div>
           </div>
 
           {/* Hero Stats Grid - Solo dati reali */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-2">
+              <CardContent className="p-3 sm:p-4 md:p-6 text-center">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-1 sm:mb-2">
                   {totalBandi > 0 ? totalBandi : '—'}
                 </div>
-                <div className="text-sm text-iss-bordeaux-100 font-medium">
+                <div className="text-xs sm:text-sm text-iss-bordeaux-100 font-medium">
                   Bandi nel Database
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-2">
-                  {bandiAttivi > 0 ? bandiAttivi : '—'}
+              <CardContent className="p-3 sm:p-4 md:p-6 text-center">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-400 mb-1 sm:mb-2">
+                  {inScadenza > 0 ? inScadenza : '—'}
                 </div>
-                <div className="text-sm text-iss-bordeaux-100 font-medium">
-                  Bandi Attivi Ora
+                <div className="text-xs sm:text-sm text-iss-bordeaux-100 font-medium">
+                  In Scadenza (7gg)
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-2">
+              <CardContent className="p-3 sm:p-4 md:p-6 text-center">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-1 sm:mb-2">
                   {fontiMonitorate > 0 ? fontiMonitorate : '—'}
                 </div>
-                <div className="text-sm text-iss-bordeaux-100 font-medium">
+                <div className="text-xs sm:text-sm text-iss-bordeaux-100 font-medium">
                   Fonti Monitorate
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-2">
+              <CardContent className="p-3 sm:p-4 md:p-6 text-center">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-iss-gold-400 mb-1 sm:mb-2">
                   24/7
                 </div>
-                <div className="text-sm text-iss-bordeaux-100 font-medium">
+                <div className="text-xs sm:text-sm text-iss-bordeaux-100 font-medium">
                   Monitoraggio Continuo
                 </div>
               </CardContent>

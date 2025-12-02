@@ -137,13 +137,6 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({ className = '' }) =>
       badge: 'Rete',
       description: 'Collaborazioni e testimonials',
       isNew: true
-    },
-    {
-      name: 'Dashboard',
-      href: '/dashboard',
-      icon: Settings,
-      badge: 'Area Riservata',
-      description: 'Pannello di controllo personale'
     }
   ];
 
@@ -180,11 +173,10 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({ className = '' }) =>
     <>
       {/* Fixed Header - z-50 */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
             ? 'bg-white shadow-lg border-b border-gray-100'
             : 'bg-white/95 backdrop-blur-md shadow-sm'
-        } ${className}`}
+          } ${className}`}
       >
         <div className="container mx-auto px-3 sm:px-4 lg:px-6">
           <div className="flex h-14 sm:h-16 items-center justify-between">
@@ -352,9 +344,8 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({ className = '' }) =>
 
       {/* Mobile Slide-out Menu - z-45 (between overlay and header) */}
       <div
-        className={`fixed top-14 sm:top-16 left-0 right-0 bottom-0 bg-white z-[45] lg:hidden transform transition-transform duration-300 ease-out overflow-y-auto ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-14 sm:top-16 left-0 right-0 bottom-0 bg-white z-[45] lg:hidden transform transition-transform duration-300 ease-out overflow-y-auto ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="p-4 pb-20">
           {/* Navigation Items */}

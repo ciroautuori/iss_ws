@@ -53,7 +53,7 @@ export const Route = createFileRoute('/bandi')({
 function BandiPage() {
   const navigate = Route.useNavigate();
   const filters = Route.useSearch();
-  
+
   // States locali
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
@@ -128,8 +128,8 @@ function BandiPage() {
 
   // Selezione multipla per export
   const toggleSelectBando = (bandoId: string) => {
-    setSelectedBandi(prev => 
-      prev.includes(bandoId) 
+    setSelectedBandi(prev =>
+      prev.includes(bandoId)
         ? prev.filter(id => id !== bandoId)
         : [...prev, bandoId]
     );
@@ -146,14 +146,14 @@ function BandiPage() {
   // Skip links per accessibilità
   const SkipLinks = () => (
     <div className="sr-only focus-within:not-sr-only">
-      <a 
-        href="#bandi-search" 
+      <a
+        href="#bandi-search"
         className="absolute top-4 left-4 z-50 bg-iss-bordeaux-800 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-iss-gold-500"
       >
         Salta alla ricerca bandi
       </a>
-      <a 
-        href="#bandi-results" 
+      <a
+        href="#bandi-results"
         className="absolute top-4 left-48 z-50 bg-iss-bordeaux-800 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-iss-gold-500"
       >
         Salta ai risultati
@@ -164,28 +164,31 @@ function BandiPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <SkipLinks />
-      
+
       {/* Header sezione */}
       <section className="bg-white border-b border-gray-200">
-        <div className="container py-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="container px-4 sm:px-6 py-6 sm:py-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 🎯 Hub Bandi APS
               </h1>
-              <p className="text-lg text-gray-600">
+              <p className="text-base sm:text-lg text-gray-600">
                 Trova i bandi di finanziamento perfetti per la tua associazione
               </p>
             </div>
-            
+
             {stats && (
-              <BandoStats stats={stats} />
+              <div className="w-full lg:w-auto">
+                <BandoStats stats={stats} compact className="lg:hidden" />
+                <BandoStats stats={stats} className="hidden lg:block" />
+              </div>
             )}
           </div>
 
           {/* Barra ricerca principale */}
           <div id="bandi-search">
-            <BandoSearchBar 
+            <BandoSearchBar
               value={filters.search}
               onSearch={(search) => updateFilters({ search })}
               onAdvancedSearch={() => setShowFilters(!showFilters)}
@@ -210,9 +213,9 @@ function BandiPage() {
 
       {/* Toolbar risultati */}
       <section className="bg-white border-b border-gray-200">
-        <div className="container py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="container px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               <div className="text-sm text-gray-600" role="status" aria-live="polite">
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -233,8 +236,8 @@ function BandiPage() {
                   <Badge variant="secondary">
                     {selectedBandi.length} selezionati
                   </Badge>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={clearSelection}
                     aria-label="Deseleziona tutti i bandi"
@@ -245,14 +248,16 @@ function BandiPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              {/* Export */}
-              <BandoExport
-                selectedBandi={selectedBandi.length > 0 ? selectedBandi : bandi.map(b => b.id)}
-                filters={filters}
-              />
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-start">
+              {/* Export - hidden on very small screens */}
+              <div className="hidden sm:block">
+                <BandoExport
+                  selectedBandi={selectedBandi.length > 0 ? selectedBandi : bandi.map(b => b.id)}
+                  filters={filters}
+                />
+              </div>
 
-              {/* Selezione tutti */}
+              {/* Selezione tutti - hidden on mobile */}
               {bandi.length > 0 && (
                 <Button
                   variant="outline"
@@ -260,6 +265,7 @@ function BandiPage() {
                   onClick={selectAllBandi}
                   disabled={selectedBandi.length === bandi.length}
                   aria-label="Seleziona tutti i bandi visibili"
+                  className="hidden md:inline-flex"
                 >
                   Seleziona tutti
                 </Button>
@@ -273,6 +279,7 @@ function BandiPage() {
                   onClick={() => setViewMode('grid')}
                   aria-label="Vista griglia"
                   aria-pressed={viewMode === 'grid'}
+                  className="px-2 sm:px-3"
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
@@ -282,6 +289,7 @@ function BandiPage() {
                   onClick={() => setViewMode('list')}
                   aria-label="Vista lista"
                   aria-pressed={viewMode === 'list'}
+                  className="px-2 sm:px-3"
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -292,7 +300,7 @@ function BandiPage() {
       </section>
 
       {/* Risultati */}
-      <main className="container py-8" id="bandi-results">
+      <main className="container px-4 sm:px-6 py-6 sm:py-8" id="bandi-results">
         {error ? (
           <Card className="border-red-200 bg-red-50">
             <CardContent className="p-6 text-center">
@@ -302,7 +310,7 @@ function BandiPage() {
               <p className="text-red-700 mb-4">
                 {error.message || 'Si è verificato un errore imprevisto'}
               </p>
-              <Button 
+              <Button
                 onClick={() => window.location.reload()}
                 variant="outline"
               >
@@ -338,13 +346,13 @@ function BandiPage() {
                 Prova a modificare i filtri di ricerca o controlla più tardi per nuovi bandi.
               </p>
               <div className="flex gap-4 justify-center">
-                <Button 
+                <Button
                   onClick={() => updateFilters(filtersSchema)}
                   variant="outline"
                 >
                   Rimuovi filtri
                 </Button>
-                <Button 
+                <Button
                   onClick={() => setShowFilters(true)}
                 >
                   Modifica ricerca
@@ -355,10 +363,10 @@ function BandiPage() {
         ) : (
           <>
             {/* Grid/List view */}
-            <div 
+            <div
               className={cn(
-                viewMode === 'grid' 
-                  ? 'grid gap-6 md:grid-cols-2 lg:grid-cols-3' 
+                viewMode === 'grid'
+                  ? 'grid gap-6 md:grid-cols-2 lg:grid-cols-3'
                   : 'space-y-6'
               )}
               role="region"
@@ -389,10 +397,10 @@ function BandiPage() {
                 >
                   Precedente
                 </Button>
-                
+
                 <div className="flex items-center gap-2">
-                  {Array.from({ 
-                    length: Math.min(5, Math.ceil(totalCount / filters.per_page)) 
+                  {Array.from({
+                    length: Math.min(5, Math.ceil(totalCount / filters.per_page))
                   }).map((_, i) => {
                     const page = i + 1;
                     return (
@@ -425,10 +433,10 @@ function BandiPage() {
       </main>
 
       {/* Live region per annunci screen reader */}
-      <div 
-        role="status" 
-        aria-live="polite" 
-        aria-atomic="true" 
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
         className="sr-only"
         id="search-announcements"
       >

@@ -118,7 +118,7 @@ export const BandoCard: React.FC<BandoCardProps> = ({
     return (
       <div
         className={cn(
-          'flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:border-iss-bordeaux-200',
+          'flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white border border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:border-iss-bordeaux-200',
           bando.scaduto && 'opacity-75',
           bando.giorni_rimanenti !== undefined && bando.giorni_rimanenti <= 7 && 'ring-1 ring-orange-200',
           isSelected && 'ring-2 ring-iss-bordeaux-600 bg-iss-bordeaux-50',
@@ -138,33 +138,33 @@ export const BandoCard: React.FC<BandoCardProps> = ({
         )}
 
         {/* Contenuto principale */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold line-clamp-1 mb-2">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4">
+            <div className="flex-1 min-w-0 w-full">
+              <h3 className="text-base sm:text-lg font-semibold line-clamp-2 mb-2">
                 {bando.title}
               </h3>
 
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
                 {getStatusBadge()}
-                <Badge variant="outline" className="flex items-center gap-1">
+                <Badge variant="outline" className="flex items-center gap-1 text-xs">
                   <Tag className="h-3 w-3" />
                   {getFonteLabel(bando.fonte)}
                 </Badge>
               </div>
 
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Building2 className="h-4 w-4 flex-shrink-0" />
-                <span>{bando.ente}</span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                <Building2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                <span className="truncate">{bando.ente}</span>
               </div>
             </div>
 
             {/* Info laterali */}
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm flex-wrap sm:flex-nowrap w-full sm:w-auto">
               {bando.importo_max && (
                 <div className="text-center">
                   <div className="flex items-center gap-1 text-green-600 font-medium">
-                    <Euro className="h-4 w-4" />
+                    <Euro className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>{formatCurrency(bando.importo_max)}</span>
                   </div>
                   <div className="text-xs text-gray-500">Importo max</div>
@@ -178,7 +178,7 @@ export const BandoCard: React.FC<BandoCardProps> = ({
                     bando.scaduto ? "text-gray-500" :
                     (bando.giorni_rimanenti !== undefined && bando.giorni_rimanenti <= 7) ? "text-orange-600" : "text-gray-600"
                   )}>
-                    <Calendar className="h-4 w-4" />
+                    <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                     <time dateTime={bando.scadenza}>
                       {formatDate(bando.scadenza)}
                     </time>
@@ -189,12 +189,12 @@ export const BandoCard: React.FC<BandoCardProps> = ({
             </div>
 
             {/* Azioni */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSave}
-                className="p-2"
+                className="p-2 min-h-[44px] min-w-[44px]"
                 aria-label={isSaved ? `Rimuovi dai salvati il bando ${bando.title}` : `Salva il bando ${bando.title}`}
               >
                 {isSaved ? (
@@ -208,11 +208,12 @@ export const BandoCard: React.FC<BandoCardProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={handleExternalLink}
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 text-xs sm:text-sm min-h-[44px]"
                 aria-label={`Vai al sito del bando ${bando.title} (si apre in una nuova finestra)`}
               >
                 <ExternalLink className="h-3 w-3" />
-                Vai al bando
+                <span className="hidden xs:inline">Vai al bando</span>
+                <span className="xs:hidden">Vai</span>
               </Button>
             </div>
           </div>
@@ -242,7 +243,7 @@ export const BandoCard: React.FC<BandoCardProps> = ({
         }
       }}
     >
-      <CardHeader className={cn('pb-3', compact && 'pb-2')}>
+      <CardHeader className={cn('pb-2 sm:pb-3', compact && 'pb-2')}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             {onSelect && (
@@ -257,7 +258,7 @@ export const BandoCard: React.FC<BandoCardProps> = ({
 
             <CardTitle
               id={`bando-title-${bando.id}`}
-              className="text-base font-semibold line-clamp-2 mb-2"
+              className="text-sm sm:text-base font-semibold line-clamp-2 mb-2"
             >
               {bando.title}
             </CardTitle>
@@ -276,7 +277,7 @@ export const BandoCard: React.FC<BandoCardProps> = ({
               variant="ghost"
               size="sm"
               onClick={handleSave}
-              className="p-1"
+              className="p-1 min-h-[44px] min-w-[44px]"
               aria-label={isSaved ? `Rimuovi dai salvati il bando ${bando.title}` : `Salva il bando ${bando.title}`}
             >
               {isSaved ? (
@@ -292,8 +293,8 @@ export const BandoCard: React.FC<BandoCardProps> = ({
       <CardContent className="pt-0">
         <div className="space-y-3">
           {/* Ente erogatore */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Building2 className="h-4 w-4 flex-shrink-0" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+          <Building2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
             <span className="truncate">{bando.ente}</span>
           </div>
 
@@ -305,8 +306,8 @@ export const BandoCard: React.FC<BandoCardProps> = ({
           )}
 
           {/* Info importanti */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-4 text-sm">
+          <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between pt-2 gap-2">
+            <div className="flex items-center flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm">
               {bando.importo_max && (
                 <div className="flex items-center gap-1 text-green-600 font-medium">
                   <Euro className="h-4 w-4" />
@@ -338,11 +339,12 @@ export const BandoCard: React.FC<BandoCardProps> = ({
               variant="outline"
               size="sm"
               onClick={handleExternalLink}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 text-xs sm:text-sm min-h-[44px]"
               aria-label={`Vai al sito del bando ${bando.title} (si apre in una nuova finestra)`}
             >
               <ExternalLink className="h-3 w-3" />
-              Vai al bando
+              <span className="hidden xs:inline">Vai al bando</span>
+              <span className="xs:hidden">Vai</span>
             </Button>
           </div>
 

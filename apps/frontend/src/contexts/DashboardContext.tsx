@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { bandoService } from '@/services/api';
+import { bandoAPI } from '@/services/api';
 import type { BandoStats, ISSStats } from '@/types/api';
 
 interface DashboardContextValue {
@@ -51,7 +51,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
     refetch: refetchBandoStats,
   } = useQuery({
     queryKey: ['bando-stats'],
-    queryFn: bandoService.getStats,
+    queryFn: bandoAPI.getStats,
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchInterval: 1000 * 60 * 10, // 10 minutes
     retry: 3,

@@ -7,7 +7,7 @@ import { BandoCard } from '@/components/bandi/BandoCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Target } from 'lucide-react';
-import { bandoService } from '@/services/api';
+import { bandoAPI } from '@/services/api';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -17,14 +17,14 @@ function HomePage() {
   // Fetch recent bandi
   const { data: recentBandi, isLoading: isLoadingBandi } = useQuery({
     queryKey: ['recent-bandi'],
-    queryFn: () => bandoService.getRecent(3),
+    queryFn: () => bandoAPI.getRecent(3),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Fetch stats for dashboard and hero
   const { data: bandoStats, isLoading: isLoadingStats } = useQuery({
     queryKey: ['bando-stats'],
-    queryFn: bandoService.getStats,
+    queryFn: bandoAPI.getStats,
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
